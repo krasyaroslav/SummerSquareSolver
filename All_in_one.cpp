@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <math.h>
+#include <assert.h>
 
 const double EPSILON = 0.000001;
 const int INFINITE_ROOTS = -1;
@@ -115,6 +116,11 @@ void OutputSquare(const int nRoots, const double x1, const double x2)
 
 int SolveSquare (const double a, const double b, const double c, double* const x1, double* const x2)
 {
+    assert(isfinite(a) == 1);
+    assert(isfinite(b) == 1);
+    assert(isfinite(c) == 1);
+    assert(x1 != x2);
+
     if (-EPSILON < a && a < EPSILON)
     {
         if (-EPSILON < b && b < EPSILON)
