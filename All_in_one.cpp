@@ -121,11 +121,11 @@ int SolveSquare (const double a, const double b, const double c, double* const x
     assert(isfinite(c) == 1);
     assert(x1 != x2);
 
-    if (-EPSILON < a && a < EPSILON)
+    if (fabs(a) < EPSILON)
     {
-        if (-EPSILON < b && b < EPSILON)
+        if (fabs(b) < EPSILON)
         {
-            if (-EPSILON < c && c < EPSILON)
+            if (fabs(c) < EPSILON)
             {
                 return INFINITE_ROOTS;
             }
@@ -136,9 +136,15 @@ int SolveSquare (const double a, const double b, const double c, double* const x
         }
         else
         {
-
-            *x1 = -c / b; // -0 AND +0
-
+            if (fabs(c) < EPSILON)
+            {
+                *x1 = 0;
+                return 1;
+            }
+            else
+            {
+                *x1 = -c / b;
+            }
             return 1;
         }
     }
@@ -153,7 +159,7 @@ int SolveSquare (const double a, const double b, const double c, double* const x
         }
         else
         {
-            if (d < EPSILON && d > -EPSILON)
+            if (fabs(d) < EPSILON)
             {
 
                 *x1 = -b / (2*a);
@@ -194,8 +200,8 @@ int Test(int* const nTestP, const double a, const double b, const double c, cons
     double x1 = NAN, x2 = NAN;
     int nRoots = SolveSquare(a, b, c, &x1, &x2);
     if (nRoots == nRootsExp &&
-       ((x1Exp - EPSILON < x1 && x1 < x1Exp + EPSILON) || (x1 != x1 && x1Exp != x1Exp)) &&
-       ((x2Exp - EPSILON < x2 && x2 < x2Exp + EPSILON) || (x2 != x2 && x2Exp != x2Exp)))
+       (fabs(x1 - x1Exp) < EPSILON || (x1 != x1 && x1Exp != x1Exp)) &&
+       (fabs(x2 - x2Exp) < EPSILON || (x2 != x2 && x2Exp != x2Exp)))
     {
         printf("Test %d. Success\n\n", *nTestP);
         (*nTestP)++;
