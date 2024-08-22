@@ -96,11 +96,11 @@ void OutputSquare(const int nRoots, const double x1, const double x2)
             break;
 
         case 1:
-            printf("First root %g", x1);
+            printf("First root %lg", x1);
             break;
 
         case 2:
-            printf("First root %g, second root %g", x1, x2);
+            printf("First root %lg, second root %lg", x1, x2);
             break;
 
         case INFINITE_ROOTS:
