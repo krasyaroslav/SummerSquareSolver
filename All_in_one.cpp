@@ -120,6 +120,7 @@ int SolveSquare (const double a, const double b, const double c, double* const x
     assert(isfinite(b) == 1);
     assert(isfinite(c) == 1);
     assert(x1 != x2);
+    assert(x1 != 0 && x2 != 0);
 
     if (fabs(a) < EPSILON)
     {
