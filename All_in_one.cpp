@@ -133,7 +133,7 @@ int SolveSquare (double a, double b, double c, double * x1, double * x2)
         {
             if (-EPSILON < c && c < EPSILON)
             {
-                return -1;
+                return INFINITE_ROOTS;
             }
             else
             {
