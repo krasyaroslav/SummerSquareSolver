@@ -183,7 +183,7 @@ void RunAllTests()
 {
     int nTest = 1;
 
-    Test(&nTest, 0, 0, 0, -1, NAN, NAN);
+    Test(&nTest, 0, 0, 0, INFINITE_ROOTS, NAN, NAN);
     Test(&nTest, 0, 2.5, -12.5, 1, 5, NAN);
     Test(&nTest, 2, 0, -8, 2, -2, +2);
     Test(&nTest, 2, 0, 8, 2, -2, +2);       // deliberately incorrect data
@@ -200,8 +200,8 @@ int Test(int* const nTestP, const double a, const double b, const double c, cons
     double x1 = NAN, x2 = NAN;
     int nRoots = SolveSquare(a, b, c, &x1, &x2);
     if (nRoots == nRootsExp &&
-       (fabs(x1 - x1Exp) < EPSILON || (x1 != x1 && x1Exp != x1Exp)) &&
-       (fabs(x2 - x2Exp) < EPSILON || (x2 != x2 && x2Exp != x2Exp)))
+       (fabs(x1 - x1Exp) < EPSILON || (isnan(x1) && isnan(x1Exp))) &&
+       (fabs(x2 - x2Exp) < EPSILON || (isnan(x2) && isnan(x2Exp))))
     {
         printf("Test %d. Success\n\n", *nTestP);
         (*nTestP)++;
