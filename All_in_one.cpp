@@ -7,11 +7,11 @@ const double EPSILON = 0.000001;
 const int INFINITE_ROOTS = -1;
 
 int Mmain();
-void InputSquare(const double* a,const double* b,const double* c);
+void InputSquare(double* const a, double* const b, double* const c);
 void OutputSquare(const int nRoots, const double x1, const double x2);
-int SolveSquare (const double a, const double b, const double c, const double * x1, const double * x2);
+int SolveSquare (const double a, const double b, const double c, double* const x1, double* const x2);
 void RunAllTests();
-int Test(const int* nTestP, const double a, const double b, const double c, const int nRootsExp, const double x1Exp, const double x2Exp);
+int Test(int* const nTestP, const double a, const double b, const double c, const int nRootsExp, const double x1Exp, const double x2Exp);
 
 
 int main()     //choice
@@ -56,12 +56,13 @@ int main()     //choice
 int Mmain()
 {
     double a = NAN, b = NAN, c = NAN, x1 = NAN, x2 = NAN;
-    int nRoots = 0;
+
 
     printf("Enter the coefficients of the quadratic equation from a to c.\n");
 
     InputSquare(&a, &b, &c);
 
+    int nRoots = 0;
     nRoots = SolveSquare (a, b, c, &x1, &x2);
 
     OutputSquare(nRoots, x1,x2);
@@ -92,7 +93,7 @@ int Mmain()
 }
 
 
-void InputSquare(const double* a, const double* b, const double* c)
+void InputSquare(double* const a, double* const b, double* const c)
 {
     int ch1;
     char ch2;
@@ -135,7 +136,7 @@ void OutputSquare(const int nRoots, const double x1, const double x2)
 }
 
 
-int SolveSquare (const double a, const double b, const double c, const double* x1, const double* x2)
+int SolveSquare (const double a, const double b, const double c, double* const x1, double* const x2)
 {
     if (-EPSILON < a && a < EPSILON)
     {
@@ -205,7 +206,7 @@ void RunAllTests()
 }
 
 
-int Test(const int* nTestP, const double a, const double b, const double c, const int nRootsExp, const double x1Exp, const double x2Exp)
+int Test(int* const nTestP, const double a, const double b, const double c, const int nRootsExp, const double x1Exp, const double x2Exp)
 {
     double x1 = NAN, x2 = NAN;
     int nRoots = SolveSquare(a, b, c, &x1, &x2);
