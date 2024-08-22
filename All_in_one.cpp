@@ -59,21 +59,9 @@ int Base()
 
     printf("\nEnter 1 if you want to solve one more equation.\n");
 
-    int n = 0, ch1;
-    char ch2;
-
-    if (scanf("%d%c", &n, &ch2) != 2 || ch2 != '\n')
-    {
-        do ch1 = getchar();
-        while (ch1 != '\n');
-    }
-
-
-    printf("\n");
-
-
     if (getchar() == '1' and getchar() == '\n')
     {
+        printf("\n");
         Base();
         return 0;
     }
