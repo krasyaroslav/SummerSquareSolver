@@ -6,7 +6,8 @@
 const double EPSILON = 0.000001;
 const int INFINITE_ROOTS = -1;
 
-int Mmain();
+int Choice();
+int Base();
 void InputSquare(double* const a, double* const b, double* const c);
 void OutputSquare(const int nRoots, const double x1, const double x2);
 int SolveSquare (const double a, const double b, const double c, double* const x1, double* const x2);
@@ -14,7 +15,13 @@ void RunAllTests();
 int Test(int* const nTestP, const double a, const double b, const double c, const int nRootsExp, const double x1Exp, const double x2Exp);
 
 
-int main()     //choice
+int main()
+{
+    Choice();
+}
+
+
+int Choice()     //choice
 {
     printf("Enter 0 to run tests, or something else to solve.\n");
 
@@ -27,7 +34,7 @@ int main()     //choice
                 continue;
             }
 
-            Mmain();
+            Base();
             return 0;
 
         }
@@ -47,13 +54,13 @@ int main()     //choice
             continue;
         }
 
-        Mmain();
+        Base();
         return 0;
     }
 }
 
 
-int Mmain()
+int Base()
 {
     double a = NAN, b = NAN, c = NAN, x1 = NAN, x2 = NAN;
 
@@ -83,7 +90,7 @@ int Mmain()
 
     if (n == 1 and ch2 == '\n')
     {
-        Mmain();
+        Base();
         return 0;
     }
     else
