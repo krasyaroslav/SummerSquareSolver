@@ -21,31 +21,14 @@ int main()
 }
 
 
-int Choice()     //choice
+int Choice()
 {
     printf("Enter 0 to run tests, or something else to solve.\n");
 
-    if (getchar() == '0')
+    if (getchar() == '0' and getchar() == '\n')
     {
-        if (getchar() != '\n')
-        {
-            while (getchar() != '\n')
-            {
-                continue;
-            }
-
-            Base();
-            return 0;
-
-        }
-        else
-        {
-            printf("\n");
-
-            RunAllTests();
-
-            return 0;
-        }
+        RunAllTests();
+        return 0;
     }
     else
     {
@@ -88,7 +71,8 @@ int Base()
 
     printf("\n");
 
-    if (n == 1 and ch2 == '\n')
+
+    if (getchar() == '1' and getchar() == '\n')
     {
         Base();
         return 0;
@@ -96,23 +80,21 @@ int Base()
     else
     {
         return 0;
-    };
+    }
 }
 
 
 void InputSquare(double* const a, double* const b, double* const c)
 {
-    int ch1;
-    char ch2;
-
-    while (scanf("%lg %lg %lg%c", a, b, c, &ch2) != 4 || ch2 != '\n') {
-
-        do ch1 = getchar();
-        while (ch1 != '\n');
+    while (scanf("%lg %lg %lg", a, b, c) != 3 || getchar() != '\n')
+    {
+        while (getchar() != '\n')
+        {
+            continue;
+        }
 
         printf("You entered them wrong. Try again!\n\n");
-
-        }
+    }
 }
 
 
