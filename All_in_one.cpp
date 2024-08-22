@@ -7,11 +7,11 @@ const double EPSILON = 0.000001;
 const int INFINITE_ROOTS = -1;
 
 int Mmain();
-void InputSquare(double* a, double* b, double* c);
-void OutputSquare(int nRoots, double x1, double x2);
-int SolveSquare (double a, double b, double c, double * x1, double * x2);
+void InputSquare(const double* a,const double* b,const double* c);
+void OutputSquare(const int nRoots, const double x1, const double x2);
+int SolveSquare (const double a, const double b, const double c, const double * x1, const double * x2);
 void RunAllTests();
-int Test(int* nTestP, double a, double b, double c, int nRootsExp, double x1Exp, double x2Exp);
+int Test(const int* nTestP, const double a, const double b, const double c, const int nRootsExp, const double x1Exp, const double x2Exp);
 
 
 int main()     //choice
@@ -92,7 +92,7 @@ int Mmain()
 }
 
 
-void InputSquare(double* a, double* b, double* c)
+void InputSquare(const double* a, const double* b, const double* c)
 {
     int ch1;
     char ch2;
@@ -108,7 +108,7 @@ void InputSquare(double* a, double* b, double* c)
 }
 
 
-void OutputSquare(int nRoots, double x1, double x2)
+void OutputSquare(const int nRoots, const double x1, const double x2)
 {
     switch (nRoots)
     {
@@ -135,7 +135,7 @@ void OutputSquare(int nRoots, double x1, double x2)
 }
 
 
-int SolveSquare (double a, double b, double c, double * x1, double * x2)
+int SolveSquare (const double a, const double b, const double c, const double* x1, const double* x2)
 {
     if (-EPSILON < a && a < EPSILON)
     {
@@ -205,7 +205,7 @@ void RunAllTests()
 }
 
 
-int Test(int* nTestP, double a, double b, double c, int nRootsExp, double x1Exp, double x2Exp)
+int Test(const int* nTestP, const double a, const double b, const double c, const int nRootsExp, const double x1Exp, const double x2Exp)
 {
     double x1 = NAN, x2 = NAN;
     int nRoots = SolveSquare(a, b, c, &x1, &x2);
