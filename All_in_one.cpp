@@ -14,7 +14,7 @@ void RunAllTests();
 int Test(int* nTestP, double a, double b, double c, int nRootsExp, double x1Exp, double x2Exp);
 
 
-int main()
+int main()     //choice
 {
     printf("Enter 0 to run tests, or something else to solve.\n");
 
@@ -39,6 +39,16 @@ int main()
 
             return 0;
         }
+    }
+    else
+    {
+        while (getchar() != '\n')
+        {
+            continue;
+        }
+
+        Mmain();
+        return 0;
     }
 }
 
