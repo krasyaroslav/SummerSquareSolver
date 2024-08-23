@@ -16,8 +16,8 @@ struct input_data  // parameters
 
 struct  output_data // answer
 {
-    int nRootsExp;
-    double x1Exp, x2Exp;
+    int nRoots;
+    double x1, x2;
 };
 
 
@@ -31,7 +31,7 @@ struct dft  // data for tests
 int Choice();
 int Base();
 void InputSquare(input_data* const inDataP);
-void OutputSquare(const int nRoots, const double x1, const double x2);
+void OutputSquare(output_data* const outDataP);
 int Solve (input_data* const inDataP, double* const x1, double* const x2);
 int SolveLinear(const double b, const double c, double* const x1);
 int SolveSquare(const double a, const double b, const double c, double* const x1, double* const x2);
@@ -90,16 +90,15 @@ int Choice()
 int Base()
 {
     input_data inData = {NAN, NAN, NAN};
-    double x1 = NAN, x2 = NAN;
 
     printf("Enter the coefficients of the quadratic equation from a to c.\n");
 
     InputSquare(&inData);
 
-    int nRoots = 0;
-    nRoots = Solve(&inData, &x1, &x2);
+    output_data outData = {0, NAN, NAN};
+    outData.nRoots = Solve(&inData, &outData.x1, &outData.x2);
 
-    OutputSquare(nRoots, x1, x2);
+    OutputSquare(&outData);
 
     return 0;
 }
@@ -119,28 +118,28 @@ void InputSquare(input_data* const inDataP)
 }
 
 
-void OutputSquare(const int nRoots, const double x1, const double x2)
+void OutputSquare(output_data* const outDataP)
 {
-    switch (nRoots)
+    switch (outDataP->nRoots)
     {
         case 0:
-            printf("No roots");
+            printf("No roots\n");
             break;
 
         case 1:
-            printf("First root %lg", x1);
+            printf("First root %lg\n", outDataP->x1);
             break;
 
         case 2:
-            printf("First root %lg, second root %lg", x1, x2);
+            printf("First root %lg, second root %lg\n", outDataP->x1, outDataP->x2);
             break;
 
         case INFINITE_ROOTS:
-            printf("Any number is a root");
+            printf("Any number is a root\n");
             break;
 
         default:
-            printf("Check nRoot value");
+            printf("Check nRoot value\n");
     }
 }
 
@@ -227,7 +226,7 @@ void RunAllTests()
     printf("\n");
 
     const int nTest = 9;
-                    /*{{a, b, c}, {nRootsExp, x1Exp, x2Exp}}*/
+                    /*{{a, b, c}, {nRoots, x1, x2}}*/
     dft data[nTest]= {{{0, 0, 0}, {INFINITE_ROOTS, NAN, NAN}},
                       {{0, 2.5, -12.5}, {1, 5, NAN}},
                       {{2, 0, -8}, {2, -2, 2}},
@@ -251,9 +250,9 @@ int Test(const int nTest, dft* const dataP)
 {
     double x1 = NAN, x2 = NAN;
     int nRoots = Solve(&(dataP->params), &x1, &x2);
-    if (nRoots == (dataP->ans).nRootsExp &&
-       (fabs(x1 - (dataP->ans).x1Exp) < EPSILON || (isnan(x1) && isnan((dataP->ans).x1Exp))) &&
-       (fabs(x2 - (dataP->ans).x2Exp) < EPSILON || (isnan(x2) && isnan((dataP->ans).x2Exp))))
+    if (nRoots == (dataP->ans).nRoots &&
+       (fabs(x1 - (dataP->ans).x1) < EPSILON || (isnan(x1) && isnan((dataP->ans).x1))) &&
+       (fabs(x2 - (dataP->ans).x2) < EPSILON || (isnan(x2) && isnan((dataP->ans).x2))))
     {
         printf("Test %d. Success\n\n", nTest);
         return 0;
@@ -264,7 +263,7 @@ int Test(const int nTest, dft* const dataP)
                "Number of roots: %d, expected %d\n"
                "First root: %lg, expected %lg\n"
                "Second root: %lg, expected %lg\n\n",
-               nTest, nRoots, (dataP->ans).nRootsExp, x1, (dataP->ans).x1Exp, x2, (dataP->ans).x2Exp);
+               nTest, nRoots, (dataP->ans).nRoots, x1, (dataP->ans).x1, x2, (dataP->ans).x2);
         return 1;
     }
 
