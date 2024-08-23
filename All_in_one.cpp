@@ -30,10 +30,9 @@ struct dft  // data for tests
 
 int Choice();
 int Base();
-void Repeat();
-void InputSquare(double* const a, double* const b, double* const c);
+void InputSquare(input_data* const inDataP);
 void OutputSquare(const int nRoots, const double x1, const double x2);
-int Solve (const double a, const double b, const double c, double* const x1, double* const x2);
+int Solve (input_data* const inDataP, double* const x1, double* const x2);
 int SolveLinear(const double b, const double c, double* const x1);
 int SolveSquare(const double a, const double b, const double c, double* const x1, double* const x2);
 void RunAllTests();
@@ -90,39 +89,25 @@ int Choice()
 
 int Base()
 {
-    double a = NAN, b = NAN, c = NAN, x1 = NAN, x2 = NAN;
-
+    input_data inData = {NAN, NAN, NAN};
+    double x1 = NAN, x2 = NAN;
 
     printf("Enter the coefficients of the quadratic equation from a to c.\n");
 
-    InputSquare(&a, &b, &c);
+    InputSquare(&inData);
 
     int nRoots = 0;
-    nRoots = Solve (a, b, c, &x1, &x2);
+    nRoots = Solve(&inData, &x1, &x2);
 
-    OutputSquare(nRoots, x1,x2);
-
-    printf("\nEnter 1 if you want to solve one more equation.\n");
-
-    Repeat();
+    OutputSquare(nRoots, x1, x2);
 
     return 0;
 }
 
 
-void Repeat()
+void InputSquare(input_data* const inDataP)
 {
-    if (getchar() == '1' and getchar() == '\n')
-    {
-        printf("\n");
-        Base();
-    }
-}
-
-
-void InputSquare(double* const a, double* const b, double* const c)
-{
-    while (scanf("%lg %lg %lg", a, b, c) != 3 || getchar() != '\n')
+    while (scanf("%lg %lg %lg", &(inDataP->a), &(inDataP->b), &(inDataP->c)) != 3 || getchar() != '\n')
     {
         while (getchar() != '\n')
         {
@@ -160,21 +145,21 @@ void OutputSquare(const int nRoots, const double x1, const double x2)
 }
 
 
-int Solve (const double a, const double b, const double c, double* const x1, double* const x2)
+int Solve (input_data* const inDataP, double* const x1, double* const x2)
 {
-    assert(isfinite(a) == 1);
-    assert(isfinite(b) == 1);
-    assert(isfinite(c) == 1);
+    assert(isfinite(inDataP->a) == 1);
+    assert(isfinite(inDataP->b) == 1);
+    assert(isfinite(inDataP->c) == 1);
     assert(x1 != x2);
-    assert(x1 != 0 && x2 != 0);
+    assert(x1 != 0 && x2 != 0 && inDataP != 0);
 
-    if (fabs(a) < EPSILON)
+    if (fabs(inDataP->a) < EPSILON)
     {
-        return SolveLinear(b, c, x1);
+        return SolveLinear(inDataP->b, inDataP->c, x1);
     }
     else
     {
-        return SolveSquare(a, b, c, x1, x2);
+        return SolveSquare(inDataP->a, inDataP->b, inDataP->c, x1, x2);
     }
 }
 
@@ -265,7 +250,7 @@ void RunAllTests()
 int Test(const int nTest, dft* const dataP)
 {
     double x1 = NAN, x2 = NAN;
-    int nRoots = Solve((dataP->params).a, (dataP->params).b, (dataP->params).c, &x1, &x2);
+    int nRoots = Solve(&(dataP->params), &x1, &x2);
     if (nRoots == (dataP->ans).nRootsExp &&
        (fabs(x1 - (dataP->ans).x1Exp) < EPSILON || (isnan(x1) && isnan((dataP->ans).x1Exp))) &&
        (fabs(x2 - (dataP->ans).x2Exp) < EPSILON || (isnan(x2) && isnan((dataP->ans).x2Exp))))
