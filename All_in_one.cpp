@@ -4,8 +4,10 @@
 #include <math.h>
 #include <assert.h>
 
+
 const double EPSILON = 0.000001;
 const int INFINITE_ROOTS = -1;
+
 
 struct input_data  // parameters
 {
@@ -24,6 +26,7 @@ struct dft  // data for tests
     input_data params;
     output_data ans;
 };
+
 
 int Choice();
 int Base();
@@ -45,22 +48,42 @@ int main()
 
 int Choice()
 {
-    printf("Enter 0 to run tests, or something else to solve.\n");
+    while (1)
+    {
+        printf("Enter 0 to run tests, 1 to solve, 2 to exit.\n");
 
-    if (getchar() == '0' and getchar() == '\n')
-    {
-        RunAllTests();
-        return 0;
-    }
-    else
-    {
-        while (getchar() != '\n')
+        int enter = getchar();
+
+        while (!((enter == '0' || enter == '1' || enter == '2') && getchar() == '\n'))
         {
-            continue;
+            while (getchar() != '\n')
+            {
+                continue;
+            }
+
+            printf("Enter 0, 1 or 2!\n");
+
+            enter = getchar();
         }
 
-        Base();
-        return 0;
+        switch (enter)
+        {
+            case '0':
+                RunAllTests();
+                break;
+
+            case '1':
+                Base();
+                break;
+
+            case '2':
+                return 0;
+                break;
+
+            default:
+                printf("something weird happened\n");
+                break;
+        }
     }
 }
 
@@ -128,11 +151,10 @@ void OutputSquare(const int nRoots, const double x1, const double x2)
             break;
 
         case INFINITE_ROOTS:
-
             printf("Any number is a root");
             break;
-        default:
 
+        default:
             printf("Check nRoot value");
     }
 }
@@ -217,6 +239,8 @@ int SolveSquare(const double a, const double b, const double c, double* const x1
 
 void RunAllTests()
 {
+    printf("\n");
+
     const int nTest = 9;
                     /*{{a, b, c}, {nRootsExp, x1Exp, x2Exp}}*/
     dft data[nTest]= {{{0, 0, 0}, {INFINITE_ROOTS, NAN, NAN}},
