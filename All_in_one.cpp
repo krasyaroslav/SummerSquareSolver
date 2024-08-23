@@ -7,6 +7,24 @@
 const double EPSILON = 0.000001;
 const int INFINITE_ROOTS = -1;
 
+struct input_data  // parameters
+{
+    double a, b, c;
+};
+
+struct  output_data // answer
+{
+    int nRootsExp;
+    double x1Exp, x2Exp;
+};
+
+
+struct dft  // data for tests
+{
+    input_data params;
+    output_data ans;
+};
+
 int Choice();
 int Base();
 void Repeat();
@@ -16,7 +34,7 @@ int Solve (const double a, const double b, const double c, double* const x1, dou
 int SolveLinear(const double b, const double c, double* const x1);
 int SolveSquare(const double a, const double b, const double c, double* const x1, double* const x2);
 void RunAllTests();
-int Test(int* const nTestP, const double a, const double b, const double c, const int nRootsExp, const double x1Exp, const double x2Exp);
+int Test(const int nTest, dft* const dataP);
 
 
 int main()
@@ -199,30 +217,36 @@ int SolveSquare(const double a, const double b, const double c, double* const x1
 
 void RunAllTests()
 {
-    int nTest = 1;
+    const int nTest = 9;
+                    /*{{a, b, c}, {nRootsExp, x1Exp, x2Exp}}*/
+    dft data[nTest]= {{{0, 0, 0}, {INFINITE_ROOTS, NAN, NAN}},
+                      {{0, 2.5, -12.5}, {1, 5, NAN}},
+                      {{2, 0, -8}, {2, -2, 2}},
+                      {{2, 0, 8}, {2, -2, 2}},      // deliberately incorrect data
+                      {{1, 1, 0}, {2, -1, 0}},
+                      {{0, 0, -10}, {0, NAN, NAN}},
+                      {{0, 15.246, 0}, {1, 0, NAN}},
+                      {{-3, 0, 0}, {1, 0, NAN}},
+                      {{1, -2, -3}, {2, -1, 3}}};
 
-    Test(&nTest, 0, 0, 0, INFINITE_ROOTS, NAN, NAN);
-    Test(&nTest, 0, 2.5, -12.5, 1, 5, NAN);
-    Test(&nTest, 2, 0, -8, 2, -2, +2);
-    Test(&nTest, 2, 0, 8, 2, -2, +2);       // deliberately incorrect data
-    Test(&nTest, 1, 1, 0, 2, -1, 0);
-    Test(&nTest, 0, 0, -10, 0, NAN, NAN);
-    Test(&nTest, 0, 15.246, 0, 1, 0, NAN);
-    Test(&nTest, -3, 0, 0, 1, 0, NAN);
-    Test(&nTest, 1, -2, -3, 2, -1, 3);
+    int i;
+    for (i = 0; i < nTest; i++)
+    {
+        Test(i+1, &(data[i]));
+
+    }
 }
 
 
-int Test(int* const nTestP, const double a, const double b, const double c, const int nRootsExp, const double x1Exp, const double x2Exp)
+int Test(const int nTest, dft* const dataP)
 {
     double x1 = NAN, x2 = NAN;
-    int nRoots = Solve(a, b, c, &x1, &x2);
-    if (nRoots == nRootsExp &&
-       (fabs(x1 - x1Exp) < EPSILON || (isnan(x1) && isnan(x1Exp))) &&
-       (fabs(x2 - x2Exp) < EPSILON || (isnan(x2) && isnan(x2Exp))))
+    int nRoots = Solve((dataP->params).a, (dataP->params).b, (dataP->params).c, &x1, &x2);
+    if (nRoots == (dataP->ans).nRootsExp &&
+       (fabs(x1 - (dataP->ans).x1Exp) < EPSILON || (isnan(x1) && isnan((dataP->ans).x1Exp))) &&
+       (fabs(x2 - (dataP->ans).x2Exp) < EPSILON || (isnan(x2) && isnan((dataP->ans).x2Exp))))
     {
-        printf("Test %d. Success\n\n", *nTestP);
-        (*nTestP)++;
+        printf("Test %d. Success\n\n", nTest);
         return 0;
     }
     else
@@ -231,8 +255,7 @@ int Test(int* const nTestP, const double a, const double b, const double c, cons
                "Number of roots: %d, expected %d\n"
                "First root: %lg, expected %lg\n"
                "Second root: %lg, expected %lg\n\n",
-               *nTestP, nRoots, nRootsExp, x1, x1Exp, x2, x2Exp);
-        (*nTestP)++;
+               nTest, nRoots, (dataP->ans).nRootsExp, x1, (dataP->ans).x1Exp, x2, (dataP->ans).x2Exp);
         return 1;
     }
 
