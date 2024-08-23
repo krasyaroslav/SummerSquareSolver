@@ -11,7 +11,9 @@ int Choice();
 int Base();
 void InputSquare(double* const a, double* const b, double* const c);
 void OutputSquare(const int nRoots, const double x1, const double x2);
-int SolveSquare (const double a, const double b, const double c, double* const x1, double* const x2);
+int Solve (const double a, const double b, const double c, double* const x1, double* const x2);
+int SolveLinear(const double b, const double c, double* const x1);
+int SolveSquare(const double a, const double b, const double c, double* const x1, double* const x2);
 void RunAllTests();
 int Test(int* const nTestP, const double a, const double b, const double c, const int nRootsExp, const double x1Exp, const double x2Exp);
 
@@ -54,7 +56,7 @@ int Base()
     InputSquare(&a, &b, &c);
 
     int nRoots = 0;
-    nRoots = SolveSquare (a, b, c, &x1, &x2);
+    nRoots = Solve (a, b, c, &x1, &x2);
 
     OutputSquare(nRoots, x1,x2);
 
@@ -114,7 +116,7 @@ void OutputSquare(const int nRoots, const double x1, const double x2)
 }
 
 
-int SolveSquare (const double a, const double b, const double c, double* const x1, double* const x2)
+int Solve (const double a, const double b, const double c, double* const x1, double* const x2)
 {
     assert(isfinite(a) == 1);
     assert(isfinite(b) == 1);
@@ -124,57 +126,68 @@ int SolveSquare (const double a, const double b, const double c, double* const x
 
     if (fabs(a) < EPSILON)
     {
-        if (fabs(b) < EPSILON)
+        return SolveLinear(b, c, x1);
+    }
+    else
+    {
+        return SolveSquare(a, b, c, x1, x2);
+    }
+}
+
+
+int SolveLinear(const double b, const double c, double* const x1)
+{
+    if (fabs(b) < EPSILON)
+    {
+        if (fabs(c) < EPSILON)
         {
-            if (fabs(c) < EPSILON)
-            {
-                return INFINITE_ROOTS;
-            }
-            else
-            {
-                return 0;
-            }
+            return INFINITE_ROOTS;
         }
         else
         {
-            if (fabs(c) < EPSILON)
-            {
-                *x1 = 0;
-                return 1;
-            }
-            else
-            {
-                *x1 = -c / b;
-            }
-            return 1;
+            return 0;
         }
     }
     else
     {
-
-        double d = b*b - 4*a*c;
-
-        if (d < 0)
+        if (fabs(c) < EPSILON)
         {
-            return 0;
+            *x1 = 0;
+            return 1;
         }
         else
         {
-            if (fabs(d) < EPSILON)
-            {
+            *x1 = -c / b;
+        }
+        return 1;
+    }
+}
 
-                *x1 = -b / (2*a);
 
-                return 1;
-            }
-             else
-             {
+int SolveSquare(const double a, const double b, const double c, double* const x1, double* const x2)
+{
+    double d = b*b - 4*a*c;
 
-                *x1 = (-b - sqrt(d)) / (2*a);
-                *x2 = (-b + sqrt(d)) / (2*a);
+    if (d < 0 && fabs(d) > EPSILON)
+    {
+        return 0;
+    }
+    else
+    {
+        if (fabs(d) < EPSILON)
+        {
 
-                return 2;
-            }
+            *x1 = -b / (2*a);
+
+            return 1;
+        }
+        else
+        {
+
+            *x1 = (-b - sqrt(d)) / (2*a);
+            *x2 = (-b + sqrt(d)) / (2*a);
+
+            return 2;
         }
     }
 }
@@ -199,7 +212,7 @@ void RunAllTests()
 int Test(int* const nTestP, const double a, const double b, const double c, const int nRootsExp, const double x1Exp, const double x2Exp)
 {
     double x1 = NAN, x2 = NAN;
-    int nRoots = SolveSquare(a, b, c, &x1, &x2);
+    int nRoots = Solve(a, b, c, &x1, &x2);
     if (nRoots == nRootsExp &&
        (fabs(x1 - x1Exp) < EPSILON || (isnan(x1) && isnan(x1Exp))) &&
        (fabs(x2 - x2Exp) < EPSILON || (isnan(x2) && isnan(x2Exp))))
