@@ -9,6 +9,7 @@ const int INFINITE_ROOTS = -1;
 
 int Choice();
 int Base();
+void Repeat();
 void InputSquare(double* const a, double* const b, double* const c);
 void OutputSquare(const int nRoots, const double x1, const double x2);
 int Solve (const double a, const double b, const double c, double* const x1, double* const x2);
@@ -62,15 +63,18 @@ int Base()
 
     printf("\nEnter 1 if you want to solve one more equation.\n");
 
+    Repeat();
+
+    return 0;
+}
+
+
+void Repeat()
+{
     if (getchar() == '1' and getchar() == '\n')
     {
         printf("\n");
         Base();
-        return 0;
-    }
-    else
-    {
-        return 0;
     }
 }
 
