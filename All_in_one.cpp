@@ -6,7 +6,7 @@
 
 
 const double EPSILON = 0.000001;
-const int INFINITE_ROOTS = -1;
+enum roots {INFINITE_ROOTS = -1, NO_ROOTS, ONE_ROOT, TWO_ROOTS};
 
 
 struct input_data  // parameters
@@ -122,15 +122,15 @@ void OutputSquare(output_data* const outDataP)
 {
     switch (outDataP->nRoots)
     {
-        case 0:
+        case NO_ROOTS:
             printf("No roots\n");
             break;
 
-        case 1:
+        case ONE_ROOT:
             printf("First root %lg\n", outDataP->x1);
             break;
 
-        case 2:
+        case TWO_ROOTS:
             printf("First root %lg, second root %lg\n", outDataP->x1, outDataP->x2);
             break;
 
@@ -173,7 +173,7 @@ int SolveLinear(const double b, const double c, double* const x1)
         }
         else
         {
-            return 0;
+            return NO_ROOTS;
         }
     }
     else
@@ -181,13 +181,13 @@ int SolveLinear(const double b, const double c, double* const x1)
         if (fabs(c) < EPSILON)
         {
             *x1 = 0;
-            return 1;
+            return ONE_ROOT;
         }
         else
         {
             *x1 = -c / b;
         }
-        return 1;
+        return ONE_ROOT;
     }
 }
 
@@ -198,7 +198,7 @@ int SolveSquare(const double a, const double b, const double c, double* const x1
 
     if (d < 0 && fabs(d) > EPSILON)
     {
-        return 0;
+        return NO_ROOTS;
     }
     else
     {
@@ -207,7 +207,7 @@ int SolveSquare(const double a, const double b, const double c, double* const x1
 
             *x1 = -b / (2*a);
 
-            return 1;
+            return ONE_ROOT;
         }
         else
         {
@@ -215,7 +215,7 @@ int SolveSquare(const double a, const double b, const double c, double* const x1
             *x1 = (-b - sqrt(d)) / (2*a);
             *x2 = (-b + sqrt(d)) / (2*a);
 
-            return 2;
+            return TWO_ROOTS;
         }
     }
 }
