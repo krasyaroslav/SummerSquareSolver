@@ -28,6 +28,7 @@ struct dft  // data for tests
 };
 
 
+int IsZero(const double num);
 int Choice();
 int Base();
 void InputSquare(input_data* const inDataP);
@@ -44,6 +45,19 @@ int main()
     Choice();
 
     return 0;
+}
+
+
+int IsZero(const double num)
+{
+    if (fabs(num) < EPSILON)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 
@@ -122,11 +136,11 @@ void InputSquare(input_data* const inDataP)
 
 void OutputSquare(output_data* const outDataP)
 {
-    if (outDataP->x1 == 0)
+    if (IsZero(outDataP->x1))
     {
         outDataP->x1 = 0;
     }
-    if (outDataP->x2 == 0)
+    if (IsZero(outDataP->x2))
     {
         outDataP->x2 = 0;
     }
@@ -176,9 +190,9 @@ int Solve (input_data* const inDataP, double* const x1, double* const x2)
 
 int SolveLinear(const double b, const double c, double* const x1)
 {
-    if (fabs(b) < EPSILON)
+    if (IsZero(b))
     {
-        if (fabs(c) < EPSILON)
+        if (IsZero(c))
         {
             return INFINITE_ROOTS;
         }
@@ -200,7 +214,7 @@ int SolveSquare(const double a, const double b, const double c, double* const x1
     double d = b*b - 4*a*c;
 
 
-    if (fabs(d) < EPSILON)
+    if (IsZero(d))
     {
         *x1 = -b / (2*a);
 
@@ -231,14 +245,14 @@ void RunAllTests()
     printf("\n");
                     /*{{a, b, c}, {nRoots, x1, x2}}*/
     dft data[]= {{{0, 0, 0}, {INFINITE_ROOTS, NAN, NAN}},
-                      {{0, 2.5, -12.5}, {1, 5, NAN}},
-                      {{2, 0, -8}, {2, -2, 2}},
-                      {{2, 0, 8}, {2, -2, 2}},      // deliberately incorrect data
-                      {{1, 1, 0}, {2, -1, 0}},
-                      {{0, 0, -10}, {0, NAN, NAN}},
-                      {{0, 15.246, 0}, {1, 0, NAN}},
-                      {{-3, 0, 0}, {1, 0, NAN}},
-                      {{1, -2, -3}, {2, -1, 3}}};
+                 {{0, 2.5, -12.5}, {1, 5, NAN}},
+                 {{2, 0, -8}, {2, -2, 2}},
+                 {{2, 0, 8}, {2, -2, 2}},      // deliberately incorrect data
+                 {{1, 1, 0}, {2, -1, 0}},
+                 {{0, 0, -10}, {0, NAN, NAN}},
+                 {{0, 15.246, 0}, {1, 0, NAN}},
+                 {{-3, 0, 0}, {1, 0, NAN}},
+                 {{1, -2, -3}, {2, -1, 3}}};
 
     int n = sizeof(data)/sizeof(dft);
     for (int i = 0; i < n; i++)
@@ -253,8 +267,8 @@ int Test(const int nTest, dft* const dataP)
     double x1 = NAN, x2 = NAN;
     int nRoots = Solve(&(dataP->params), &x1, &x2);
     if (nRoots == (dataP->ans).nRoots &&
-       (fabs(x1 - (dataP->ans).x1) < EPSILON || (isnan(x1) && isnan((dataP->ans).x1))) &&
-       (fabs(x2 - (dataP->ans).x2) < EPSILON || (isnan(x2) && isnan((dataP->ans).x2))))
+       (IsZero(x1 - (dataP->ans).x1) || (isnan(x1) && isnan((dataP->ans).x1))) &&
+       (IsZero(x2 - (dataP->ans).x2) || (isnan(x2) && isnan((dataP->ans).x2))))
     {
         printf("Test %d. Success\n\n", nTest);
         return 0;
