@@ -214,10 +214,10 @@ int SolveSquare(const double a, const double b, const double c, double* const x1
         }
         else
         {
-            double sqrtd = sqrt(d);
+            double sqrtD = sqrt(d);
 
-            *x1 = (-b - sqrtd) / (2*a);
-            *x2 = (-b + sqrtd) / (2*a);
+            *x1 = (-b - sqrtD) / (2*a);
+            *x2 = (-b + sqrtD) / (2*a);
 
             return TWO_ROOTS;
         }
@@ -229,10 +229,8 @@ int SolveSquare(const double a, const double b, const double c, double* const x1
 void RunAllTests()
 {
     printf("\n");
-
-    const int nTest = 9;
                     /*{{a, b, c}, {nRoots, x1, x2}}*/
-    dft data[nTest]= {{{0, 0, 0}, {INFINITE_ROOTS, NAN, NAN}},
+    dft data[]= {{{0, 0, 0}, {INFINITE_ROOTS, NAN, NAN}},
                       {{0, 2.5, -12.5}, {1, 5, NAN}},
                       {{2, 0, -8}, {2, -2, 2}},
                       {{2, 0, 8}, {2, -2, 2}},      // deliberately incorrect data
@@ -242,11 +240,10 @@ void RunAllTests()
                       {{-3, 0, 0}, {1, 0, NAN}},
                       {{1, -2, -3}, {2, -1, 3}}};
 
-    int i;
-    for (i = 0; i < nTest; i++)
+    int n = sizeof(data)/sizeof(dft);
+    for (int i = 0; i < n; i++)
     {
         Test(i+1, &(data[i]));
-
     }
 }
 
