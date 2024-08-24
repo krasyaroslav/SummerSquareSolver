@@ -42,6 +42,8 @@ int Test(const int nTest, dft* const dataP);
 int main()
 {
     Choice();
+
+    return 0;
 }
 
 
@@ -212,8 +214,10 @@ int SolveSquare(const double a, const double b, const double c, double* const x1
         }
         else
         {
-            *x1 = (-b - sqrt(d)) / (2*a);
-            *x2 = (-b + sqrt(d)) / (2*a);
+            double sqrtd = sqrt(d);
+
+            *x1 = (-b - sqrtd) / (2*a);
+            *x2 = (-b + sqrtd) / (2*a);
 
             return TWO_ROOTS;
         }
