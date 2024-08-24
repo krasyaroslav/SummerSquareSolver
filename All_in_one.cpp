@@ -120,6 +120,15 @@ void InputSquare(input_data* const inDataP)
 
 void OutputSquare(output_data* const outDataP)
 {
+    if (outDataP->x1 == 0)
+    {
+        outDataP->x1 = 0;
+    }
+    if (outDataP->x2 == 0)
+    {
+        outDataP->x2 = 0;
+    }
+
     switch (outDataP->nRoots)
     {
         case NO_ROOTS:
@@ -178,15 +187,7 @@ int SolveLinear(const double b, const double c, double* const x1)
     }
     else
     {
-        if (fabs(c) < EPSILON)
-        {
-            *x1 = 0;
-            return ONE_ROOT;
-        }
-        else
-        {
-            *x1 = -c / b;
-        }
+        *x1 = -c / b;
         return ONE_ROOT;
     }
 }
