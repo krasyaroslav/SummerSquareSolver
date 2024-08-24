@@ -197,27 +197,27 @@ int SolveSquare(const double a, const double b, const double c, double* const x1
 {
     double d = b*b - 4*a*c;
 
-    if (d < 0 && fabs(d) > EPSILON)
+
+    if (fabs(d) < EPSILON)
     {
-        return NO_ROOTS;
+        *x1 = -b / (2*a);
+
+        return ONE_ROOT;
     }
     else
     {
-        if (fabs(d) < EPSILON)
+        if (fabs(d) < 0)
         {
-
-            *x1 = -b / (2*a);
-
-            return ONE_ROOT;
+            return NO_ROOTS;
         }
         else
         {
-
             *x1 = (-b - sqrt(d)) / (2*a);
             *x2 = (-b + sqrt(d)) / (2*a);
 
             return TWO_ROOTS;
         }
+
     }
 }
 
