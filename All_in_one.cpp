@@ -297,7 +297,7 @@ int SolveSquare(parameters* inDataP, double* const x1, double* const x2)
 {
     assert(inDataP != 0);
     assert(x1 != 0);
-    assert(x1 != 0);
+    assert(x2 != 0);
     assert(x1 != x2);
 
     double a = inDataP->a, b = inDataP->b, c = inDataP->c;
