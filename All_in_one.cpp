@@ -1,12 +1,13 @@
 //RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT RT
 
+
 #include <stdio.h>
 #include <math.h>
 #include <assert.h>
 
 
-const double EPSILON = 0.000001;
-enum roots {INFINITE_ROOTS = -1, NO_ROOTS, ONE_ROOT, TWO_ROOTS};
+const double EPSILON = 1e-6;
+enum roots {INFINITE_ROOTS = -1, NO_ROOTS = 0, ONE_ROOT = 1, TWO_ROOTS = 2};
 
 
 struct input_data  // parameters
@@ -20,7 +21,6 @@ struct  output_data // answer
     double x1, x2;
 };
 
-
 struct dft  // data for tests
 {
     input_data params;
@@ -29,6 +29,8 @@ struct dft  // data for tests
 
 
 int IsZero(const double num);
+int IsEndOfInput(const int sym);
+int ChoiceInput();
 int Choice();
 int Base();
 void InputSquare(input_data* const inDataP);
@@ -61,25 +63,69 @@ int IsZero(const double num)
 }
 
 
-int Choice()
+int IsEndOfInput(const int sym)
 {
+    if (sym == EOF || sym == '\n' || sym == 26)
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+
+int ChoiceInput()
+{
+    printf("Enter 0 to run tests, 1 to solve, 2 to exit.\n");
+
+    int ch1;
+
     while (1)
     {
-        printf("Enter 0 to run tests, 1 to solve, 2 to exit.\n");
+        ch1 = getchar();
 
-        int enter = getchar();
-
-        while (!((enter == '0' || enter == '1' || enter == '2') && getchar() == '\n'))
+        if (IsEndOfInput(ch1))
         {
-            while (getchar() != '\n')
-            {
-                continue;
-            }
-
-            printf("Enter 0, 1 or 2!\n");
-
-            enter = getchar();
+            printf("Input at least something! It'll be better if you enter 0, 1, or 2.\n");
+            continue;
         }
+        else
+        {
+            if (IsEndOfInput(getchar()))
+            {
+                if (ch1 == '0' || ch1 == '1' || ch1 == '2')
+                {
+                    return ch1;
+                }
+                else
+                {
+                    printf("Enter 0, 1 or 2!\n");
+                }
+
+            }
+            else
+            {
+                while (!IsEndOfInput(getchar()))
+                {
+                    continue;
+                }
+
+                printf("Enter ONE number! It'll be better if you enter 0, 1, or 2.\n");
+            }
+        }
+    }
+}
+
+
+int Choice()
+{
+    int enter;
+
+    while (1)
+    {
+        enter = ChoiceInput();
 
         switch (enter)
         {
@@ -148,23 +194,23 @@ void OutputSquare(output_data* const outDataP)
     switch (outDataP->nRoots)
     {
         case NO_ROOTS:
-            printf("No roots\n");
+            printf("No roots\n\n");
             break;
 
         case ONE_ROOT:
-            printf("First root %lg\n", outDataP->x1);
+            printf("First root %lg\n\n", outDataP->x1);
             break;
 
         case TWO_ROOTS:
-            printf("First root %lg, second root %lg\n", outDataP->x1, outDataP->x2);
+            printf("First root %lg, second root %lg\n\n", outDataP->x1, outDataP->x2);
             break;
 
         case INFINITE_ROOTS:
-            printf("Any number is a root\n");
+            printf("Any number is a root\n\n");
             break;
 
         default:
-            printf("Check nRoot value\n");
+            printf("Check nRoot value\n\n");
     }
 }
 
@@ -213,7 +259,6 @@ int SolveSquare(const double a, const double b, const double c, double* const x1
 {
     double d = b*b - 4*a*c;
 
-
     if (IsZero(d))
     {
         *x1 = -b / (2*a);
@@ -222,7 +267,7 @@ int SolveSquare(const double a, const double b, const double c, double* const x1
     }
     else
     {
-        if (fabs(d) < 0)
+        if (d < 0)
         {
             return NO_ROOTS;
         }
@@ -243,7 +288,7 @@ int SolveSquare(const double a, const double b, const double c, double* const x1
 void RunAllTests()
 {
     printf("\n");
-                    /*{{a, b, c}, {nRoots, x1, x2}}*/
+               /*{{a, b, c}, {nRoots, x1, x2}}*/
     dft data[]= {{{0, 0, 0}, {INFINITE_ROOTS, NAN, NAN}},
                  {{0, 2.5, -12.5}, {1, 5, NAN}},
                  {{2, 0, -8}, {2, -2, 2}},
