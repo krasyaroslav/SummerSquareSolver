@@ -6,7 +6,7 @@
 #include <assert.h>
 
 
-const double EPSILON = 1e-6;
+const double EPSILON = 1e-11;
 enum roots {INFINITE_ROOTS = -1, NO_ROOTS = 0, ONE_ROOT = 1, TWO_ROOTS = 2};
 
 
@@ -90,7 +90,7 @@ int ChoiceInput()
 {
     printf("Enter 0 to run tests, 1 to solve, 2 to exit.\n");
 
-    int ch1;
+    int ch1 = 0;
 
     while (1)
     {
@@ -128,7 +128,7 @@ int ChoiceInput()
 
 int Choice()
 {
-    int enter;
+    int enter = 0;
 
     while (1)
     {
