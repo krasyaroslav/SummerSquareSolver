@@ -38,7 +38,7 @@ void InputSquare(parameters* const inDataP);
 void OutputSquare(answer* const outDataP);
 void Solve (parameters* const inDataP, answer* const outDataP);
 int SolveLinear(const double b, const double c, double* const x1);
-int SolveSquare(const double a, const double b, const double c, double* const x1, double* const x2);
+int SolveSquare(parameters* const inDataP, double* const x1, double* const x2);
 void RunAllTests();
 int Test(const int nTest, data_for_tests* const dataP);
 
@@ -265,13 +265,15 @@ void Solve (parameters* const inDataP, answer* const outDataP)
     }
     else
     {
-        outDataP->nRoots = SolveSquare(inDataP->a, inDataP->b, inDataP->c, &(outDataP->x1), &(outDataP->x2));
+        outDataP->nRoots = SolveSquare(inDataP, &(outDataP->x1), &(outDataP->x2));
     }
 }
 
 
 int SolveLinear(const double b, const double c, double* const x1)
 {
+    assert(x1 != 0);
+
     if (IsZero(b))
     {
         if (IsZero(c))
@@ -291,8 +293,15 @@ int SolveLinear(const double b, const double c, double* const x1)
 }
 
 
-int SolveSquare(const double a, const double b, const double c, double* const x1, double* const x2)
+int SolveSquare(parameters* inDataP, double* const x1, double* const x2)
 {
+    assert(inDataP != 0);
+    assert(x1 != 0);
+    assert(x1 != 0);
+    assert(x1 != x2);
+
+    double a = inDataP->a, b = inDataP->b, c = inDataP->c;
+
     double d = b*b - 4*a*c;
 
     if (IsZero(d))
@@ -345,8 +354,11 @@ void RunAllTests()
 
 int Test(const int nTest, data_for_tests* const dataP)
 {
+    assert(dataP != 0);
+
     answer ans = {NO_ROOTS, NAN, NAN};
     Solve(&(dataP->params), &ans);
+
     if (ans.nRoots == (dataP->ans).nRoots &&
        (IsZero(ans.x1 - (dataP->ans).x1) || (isnan(ans.x1) && isnan((dataP->ans).x1))) &&
        (IsZero(ans.x2 - (dataP->ans).x2) || (isnan(ans.x2) && isnan((dataP->ans).x2))))
