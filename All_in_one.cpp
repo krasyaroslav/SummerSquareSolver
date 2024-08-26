@@ -7,48 +7,40 @@
 
 
 const double EPSILON = 1e-11;
-enum roots {INFINITE_ROOTS = -1, NO_ROOTS = 0, ONE_ROOT = 1, TWO_ROOTS = 2};
+enum ROOTS {INFINITE_ROOTS = -1, NO_ROOTS = 0, ONE_ROOT = 1, TWO_ROOTS = 2};
+const int WEIRD_NUMBER = 26;
 
 
-struct input_data  // parameters
+struct parameters  // parameters
 {
     double a, b, c;
 };
 
-struct  output_data // answer
+struct  answer // answer
 {
     int nRoots;
     double x1, x2;
 };
 
-struct dft  // data for tests
+struct data_for_tests  // data for tests
 {
-    input_data params;
-    output_data ans;
+    parameters params;
+    answer ans;
 };
 
 
 int IsZero(const double num);
 int IsEndOfInput(const int sym);
 void Skip();
-int ChoiceInput();
-int Choice();
-int Base();
-void InputSquare(input_data* const inDataP);
-void OutputSquare(output_data* const outDataP);
-int Solve (input_data* const inDataP, double* const x1, double* const x2);
+int MainInput();
+void Base();
+void InputSquare(parameters* const inDataP);
+void OutputSquare(answer* const outDataP);
+void Solve (parameters* const inDataP, answer* const outDataP);
 int SolveLinear(const double b, const double c, double* const x1);
 int SolveSquare(const double a, const double b, const double c, double* const x1, double* const x2);
 void RunAllTests();
-int Test(const int nTest, dft* const dataP);
-
-
-int main()
-{
-    Choice();
-
-    return 0;
-}
+int Test(const int nTest, data_for_tests* const dataP);
 
 
 int IsZero(const double num)
@@ -66,7 +58,7 @@ int IsZero(const double num)
 
 int IsEndOfInput(const int sym)
 {
-    if (sym == EOF || sym == '\n' || sym == 26)
+    if (sym == EOF || sym == '\n' || sym == WEIRD_NUMBER)
     {
         return 1;
     }
@@ -86,7 +78,7 @@ void Skip()
 }
 
 
-int ChoiceInput()
+int MainInput()
 {
     printf("Enter 0 to run tests, 1 to solve, 2 to exit.\n");
 
@@ -126,13 +118,13 @@ int ChoiceInput()
 }
 
 
-int Choice()
+int main()
 {
     int enter = 0;
 
     while (1)
     {
-        enter = ChoiceInput();
+        enter = MainInput();
 
         switch (enter)
         {
@@ -156,25 +148,25 @@ int Choice()
 }
 
 
-int Base()
+void Base()
 {
-    input_data inData = {NAN, NAN, NAN};
+    parameters inData = {NAN, NAN, NAN};
 
     printf("Enter the coefficients of the quadratic equation from a to c.\n");
 
     InputSquare(&inData);
 
-    output_data outData = {0, NAN, NAN};
-    outData.nRoots = Solve(&inData, &outData.x1, &outData.x2);
+    answer outData = {0, NAN, NAN};
+    Solve(&inData, &outData);
 
     OutputSquare(&outData);
-
-    return 0;
 }
 
 
-void InputSquare(input_data* const inDataP)
+void InputSquare(parameters* const inDataP)
 {
+    assert(inDataP != 0);
+
     while (1)
     {
         int retVal = scanf("%lg %lg %lg", &(inDataP->a), &(inDataP->b), &(inDataP->c));
@@ -222,8 +214,10 @@ void InputSquare(input_data* const inDataP)
 }
 
 
-void OutputSquare(output_data* const outDataP)
+void OutputSquare(answer* const outDataP)
 {
+    assert(outDataP != 0);
+
     if (IsZero(outDataP->x1))
     {
         outDataP->x1 = 0;
@@ -257,21 +251,21 @@ void OutputSquare(output_data* const outDataP)
 }
 
 
-int Solve (input_data* const inDataP, double* const x1, double* const x2)
+void Solve (parameters* const inDataP, answer* const outDataP)
 {
     assert(isfinite(inDataP->a) == 1);
     assert(isfinite(inDataP->b) == 1);
     assert(isfinite(inDataP->c) == 1);
-    assert(x1 != x2);
-    assert(x1 != 0 && x2 != 0 && inDataP != 0);
+    assert(inDataP != 0);
+    assert(outDataP != 0);
 
     if (fabs(inDataP->a) < EPSILON)
     {
-        return SolveLinear(inDataP->b, inDataP->c, x1);
+        outDataP->nRoots = SolveLinear(inDataP->b, inDataP->c, &(outDataP->x1));
     }
     else
     {
-        return SolveSquare(inDataP->a, inDataP->b, inDataP->c, x1, x2);
+        outDataP->nRoots = SolveSquare(inDataP->a, inDataP->b, inDataP->c, &(outDataP->x1), &(outDataP->x2));
     }
 }
 
@@ -330,18 +324,18 @@ int SolveSquare(const double a, const double b, const double c, double* const x1
 void RunAllTests()
 {
     printf("\n");
-               /*{{a, b, c}, {nRoots, x1, x2}}*/
-    dft data[]= {{{0, 0, 0}, {INFINITE_ROOTS, NAN, NAN}},
-                 {{0, 2.5, -12.5}, {1, 5, NAN}},
-                 {{2, 0, -8}, {2, -2, 2}},
-                 {{2, 0, 8}, {2, -2, 2}},      // deliberately incorrect data
-                 {{1, 1, 0}, {2, -1, 0}},
-                 {{0, 0, -10}, {0, NAN, NAN}},
-                 {{0, 15.246, 0}, {1, 0, NAN}},
-                 {{-3, 0, 0}, {1, 0, NAN}},
-                 {{1, -2, -3}, {2, -1, 3}}};
+                      /*{{ a,      b,     c}, {        nRoots,  x1,  x2}}*/
+    data_for_tests data[] = {{{ 0,      0,     0}, {INFINITE_ROOTS, NAN, NAN}},
+                             {{ 0,    2.5, -12.5}, {      ONE_ROOT,   5, NAN}},
+                             {{ 2,      0,    -8}, {     TWO_ROOTS,  -2,   2}},
+                             {{ 2,      0,     8}, {     TWO_ROOTS,  -2,   2}},      // deliberately incorrect data
+                             {{ 1,      1,     0}, {     TWO_ROOTS,  -1,   0}},
+                             {{ 0,      0,   -10}, {      NO_ROOTS, NAN, NAN}},
+                             {{ 0, 15.246,     0}, {      ONE_ROOT,   0, NAN}},
+                             {{-3,      0,     0}, {      ONE_ROOT,   0, NAN}},
+                             {{ 1,     -2,    -3}, {     TWO_ROOTS,  -1,   3}}};
 
-    int n = sizeof(data)/sizeof(dft);
+    int n = sizeof(data)/sizeof(data_for_tests);
     for (int i = 0; i < n; i++)
     {
         Test(i+1, &(data[i]));
@@ -349,13 +343,13 @@ void RunAllTests()
 }
 
 
-int Test(const int nTest, dft* const dataP)
+int Test(const int nTest, data_for_tests* const dataP)
 {
-    double x1 = NAN, x2 = NAN;
-    int nRoots = Solve(&(dataP->params), &x1, &x2);
-    if (nRoots == (dataP->ans).nRoots &&
-       (IsZero(x1 - (dataP->ans).x1) || (isnan(x1) && isnan((dataP->ans).x1))) &&
-       (IsZero(x2 - (dataP->ans).x2) || (isnan(x2) && isnan((dataP->ans).x2))))
+    answer ans = {NO_ROOTS, NAN, NAN};
+    Solve(&(dataP->params), &ans);
+    if (ans.nRoots == (dataP->ans).nRoots &&
+       (IsZero(ans.x1 - (dataP->ans).x1) || (isnan(ans.x1) && isnan((dataP->ans).x1))) &&
+       (IsZero(ans.x2 - (dataP->ans).x2) || (isnan(ans.x2) && isnan((dataP->ans).x2))))
     {
         printf("Test %d. Success\n\n", nTest);
         return 0;
@@ -366,7 +360,7 @@ int Test(const int nTest, dft* const dataP)
                "Number of roots: %d, expected %d\n"
                "First root: %lg, expected %lg\n"
                "Second root: %lg, expected %lg\n\n",
-               nTest, nRoots, (dataP->ans).nRoots, x1, (dataP->ans).x1, x2, (dataP->ans).x2);
+               nTest, ans.nRoots, (dataP->ans).nRoots, ans.x1, (dataP->ans).x1, ans.x2, (dataP->ans).x2);
         return 1;
     }
 
