@@ -30,6 +30,7 @@ struct dft  // data for tests
 
 int IsZero(const double num);
 int IsEndOfInput(const int sym);
+void Skip();
 int ChoiceInput();
 int Choice();
 int Base();
@@ -76,6 +77,15 @@ int IsEndOfInput(const int sym)
 }
 
 
+void Skip()
+{
+    while (!IsEndOfInput(getchar()))
+    {
+        continue;
+    }
+}
+
+
 int ChoiceInput()
 {
     printf("Enter 0 to run tests, 1 to solve, 2 to exit.\n");
@@ -107,10 +117,7 @@ int ChoiceInput()
             }
             else
             {
-                while (!IsEndOfInput(getchar()))
-                {
-                    continue;
-                }
+                Skip();
 
                 printf("Enter ONE number! It'll be better if you enter 0, 1, or 2.\n");
             }
@@ -168,15 +175,50 @@ int Base()
 
 void InputSquare(input_data* const inDataP)
 {
-    while (scanf("%lg %lg %lg", &(inDataP->a), &(inDataP->b), &(inDataP->c)) != 3 || getchar() != '\n')
+    while (1)
     {
-        while (getchar() != '\n')
+        int retVal = scanf("%lg %lg %lg", &(inDataP->a), &(inDataP->b), &(inDataP->c));
+
+        if (retVal == 3)
+        {
+            if (IsEndOfInput(getchar()))
+            {
+                break;
+            }
+            else
+            {
+                Skip();
+
+                printf("You entered them wrong. Try again!\n");
+            }
+        }
+        else
+        {
+            if (retVal == -1)
+            {
+                printf( "Please, enter not only \"Ctrl+Z\".\n");
+            }
+            else
+            {
+                Skip();
+
+                printf("You entered them wrong. Try again!\n");
+            }
+        }
+
+    }
+
+
+
+    /*while (scanf("%lg %lg %lg", &(inDataP->a), &(inDataP->b), &(inDataP->c)) != 3 || IsEndOfInput(getchar()))
+    {
+        while (!IsEndOfInput(getchar()))
         {
             continue;
         }
 
         printf("You entered them wrong. Try again!\n\n");
-    }
+    }*/
 }
 
 
