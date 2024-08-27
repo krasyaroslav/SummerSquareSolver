@@ -7,7 +7,7 @@
 
 
 const double EPSILON = 1e-11;
-enum ROOTS {INFINITE_ROOTS = -1, NO_ROOTS = 0, ONE_ROOT = 1, TWO_ROOTS = 2};
+enum root_count {INFINITE_ROOTS = -1, NO_ROOTS = 0, ONE_ROOT = 1, TWO_ROOTS = 2};
 const int WEIRD_NUMBER = 26;
 
 
@@ -16,7 +16,7 @@ struct parameters  // parameters
     double a, b, c;
 };
 
-struct  answer // answer
+struct  solution // solution
 {
     int nRoots;
     double x1, x2;
@@ -25,7 +25,7 @@ struct  answer // answer
 struct data_for_tests  // data for tests
 {
     parameters params;
-    answer ans;
+    solution ans;
 };
 
 
@@ -35,12 +35,12 @@ void Skip();
 int MainInput();
 void Base();
 void InputSquare(parameters* const inDataP);
-void OutputSquare(answer* const outDataP);
-void Solve (parameters* const inDataP, answer* const outDataP);
+void OutputSquare(solution* const outDataP);
+void Solve (const parameters* const inDataP, solution* const outDataP);
 int SolveLinear(const double b, const double c, double* const x1);
-int SolveSquare(parameters* const inDataP, double* const x1, double* const x2);
+int SolveSquare(const parameters* const inDataP, double* const x1, double* const x2);
 void RunAllTests();
-int Test(const int nTest, data_for_tests* const dataP);
+int Test(const int nTest, const data_for_tests* const dataP);
 
 
 int IsZero(const double num)
@@ -156,7 +156,7 @@ void Base()
 
     InputSquare(&inData);
 
-    answer outData = {0, NAN, NAN};
+    solution outData = {0, NAN, NAN};
     Solve(&inData, &outData);
 
     OutputSquare(&outData);
@@ -199,22 +199,10 @@ void InputSquare(parameters* const inDataP)
         }
 
     }
-
-
-
-    /*while (scanf("%lg %lg %lg", &(inDataP->a), &(inDataP->b), &(inDataP->c)) != 3 || IsEndOfInput(getchar()))
-    {
-        while (!IsEndOfInput(getchar()))
-        {
-            continue;
-        }
-
-        printf("You entered them wrong. Try again!\n\n");
-    }*/
 }
 
 
-void OutputSquare(answer* const outDataP)
+void OutputSquare(solution* const outDataP)
 {
     assert(outDataP != 0);
 
@@ -251,15 +239,15 @@ void OutputSquare(answer* const outDataP)
 }
 
 
-void Solve (parameters* const inDataP, answer* const outDataP)
+void Solve (const parameters* const inDataP, solution* const outDataP)
 {
+    assert(inDataP != 0);
     assert(isfinite(inDataP->a) == 1);
     assert(isfinite(inDataP->b) == 1);
     assert(isfinite(inDataP->c) == 1);
-    assert(inDataP != 0);
     assert(outDataP != 0);
 
-    if (fabs(inDataP->a) < EPSILON)
+    if (IsZero(inDataP->a))
     {
         outDataP->nRoots = SolveLinear(inDataP->b, inDataP->c, &(outDataP->x1));
     }
@@ -293,16 +281,14 @@ int SolveLinear(const double b, const double c, double* const x1)
 }
 
 
-int SolveSquare(parameters* inDataP, double* const x1, double* const x2)
+int SolveSquare(const parameters* inDataP, double* const x1, double* const x2)
 {
     assert(inDataP != 0);
     assert(x1 != 0);
     assert(x2 != 0);
     assert(x1 != x2);
 
-    double a = inDataP->a, b = inDataP->b, c = inDataP->c;
-
-    double d = b*b - 4*a*c;
+    const double a = inDataP->a, b = inDataP->b, c = inDataP->c, d = b*b - 4*a*c;
 
     if (IsZero(d))
     {
@@ -318,7 +304,7 @@ int SolveSquare(parameters* inDataP, double* const x1, double* const x2)
         }
         else
         {
-            double sqrtD = sqrt(d);
+            const double sqrtD = sqrt(d);
 
             *x1 = (-b - sqrtD) / (2*a);
             *x2 = (-b + sqrtD) / (2*a);
@@ -333,18 +319,18 @@ int SolveSquare(parameters* inDataP, double* const x1, double* const x2)
 void RunAllTests()
 {
     printf("\n");
-                      /*{{ a,      b,     c}, {        nRoots,  x1,  x2}}*/
-    data_for_tests data[] = {{{ 0,      0,     0}, {INFINITE_ROOTS, NAN, NAN}},
-                             {{ 0,    2.5, -12.5}, {      ONE_ROOT,   5, NAN}},
-                             {{ 2,      0,    -8}, {     TWO_ROOTS,  -2,   2}},
-                             {{ 2,      0,     8}, {     TWO_ROOTS,  -2,   2}},      // deliberately incorrect data
-                             {{ 1,      1,     0}, {     TWO_ROOTS,  -1,   0}},
-                             {{ 0,      0,   -10}, {      NO_ROOTS, NAN, NAN}},
-                             {{ 0, 15.246,     0}, {      ONE_ROOT,   0, NAN}},
-                             {{-3,      0,     0}, {      ONE_ROOT,   0, NAN}},
-                             {{ 1,     -2,    -3}, {     TWO_ROOTS,  -1,   3}}};
+                                 /*{{ a,      b,     c}, {        nRoots,  x1,  x2}}*/
+    const data_for_tests data[] = {{{ 0,      0,     0}, {INFINITE_ROOTS, NAN, NAN}},
+                                   {{ 0,    2.5, -12.5}, {      ONE_ROOT,   5, NAN}},
+                                   {{ 2,      0,    -8}, {     TWO_ROOTS,  -2,   2}},
+                                   {{ 2,      0,     8}, {     TWO_ROOTS,  -2,   2}},  // deliberately incorrect data
+                                   {{ 1,      1,     0}, {     TWO_ROOTS,  -1,   0}},
+                                   {{ 0,      0,   -10}, {      NO_ROOTS, NAN, NAN}},
+                                   {{ 0, 15.246,     0}, {      ONE_ROOT,   0, NAN}},
+                                   {{-3,      0,     0}, {      ONE_ROOT,   0, NAN}},
+                                   {{ 1,     -2,    -3}, {     TWO_ROOTS,  -1,   3}}};
 
-    int n = sizeof(data)/sizeof(data_for_tests);
+    const int n = sizeof(data)/sizeof(data_for_tests);
     for (int i = 0; i < n; i++)
     {
         Test(i+1, &(data[i]));
@@ -352,11 +338,11 @@ void RunAllTests()
 }
 
 
-int Test(const int nTest, data_for_tests* const dataP)
+int Test(const int nTest, const data_for_tests* const dataP)
 {
     assert(dataP != 0);
 
-    answer ans = {NO_ROOTS, NAN, NAN};
+    solution ans = {NO_ROOTS, NAN, NAN};
     Solve(&(dataP->params), &ans);
 
     if (ans.nRoots == (dataP->ans).nRoots &&
