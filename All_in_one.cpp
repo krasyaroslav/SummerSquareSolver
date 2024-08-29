@@ -11,18 +11,18 @@ enum root_count {INFINITE_ROOTS = -1, NO_ROOTS = 0, ONE_ROOT = 1, TWO_ROOTS = 2}
 const int WEIRD_NUMBER = 26;
 
 
-struct parameters  // parameters
+struct parameters
 {
     double a, b, c;
 };
 
-struct  solution // solution
+struct  solution
 {
     int nRoots;
     double x1, x2;
 };
 
-struct data_for_tests  // data for tests
+struct data_for_tests
 {
     parameters params;
     solution ans;
